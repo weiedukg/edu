@@ -12,27 +12,34 @@ jobs:
   unzip_and_commit:
     runs-on: ubuntu-latest
 
-    # 授予工作流写入仓库的权限
     permissions:
       contents: write
 
     steps:
-      # 1. 检出仓库代码
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # 2. 解压文件到根目录
-      - name: Unzip archive
-        run: unzip -o weic-website.zip
+      # 已修改此步骤以将文件移动到根目录
+      - name: Unzip to root directory
+        run: |
+          # 1. 解压文件，这会在根目录创建一个 "weic-website" 文件夹
+          unzip -o weic-website.zip
+          
+          echo "Moving files from 'weic-website' folder to root..."
+          
+          # 2. 将 "weic-website" 文件夹中的所有内容（包括隐藏文件）移动到上一级目录（也就是根目录）
+          mv weic-website/* weic-website/.[!.]* .
+          
+          # 3. 删除现在已经变空的 "weic-website" 文件夹
+          rmdir weic-website
 
-      # 3. 提交并推送解压后的文件
       - name: Commit and push changes
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           git add .
           if ! git diff-index --quiet HEAD; then
-            git commit -m "Automated: Unzip website files"
+            git commit -m "Automated: Unzip website files to root"
             git push
           else
             echo "No changes to commit."
