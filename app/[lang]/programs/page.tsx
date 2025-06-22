@@ -2,7 +2,7 @@ import { getDictionary } from "../dictionaries"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { FileText, Clock, BarChart, GraduationCap } from "lucide-react"
+import { Clock, GraduationCap } from "lucide-react"
 
 export default async function ProgramsPage({
   params,
