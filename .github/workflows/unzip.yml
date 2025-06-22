@@ -22,22 +22,23 @@ jobs:
 
       - name: Verify Zip File
         run: |
-          unzip -l weic-website.zip  # 列出 zip 文件内容
+          unzip -l weic-website.zip  # List zip file contents
         working-directory: ${{ github.workspace }}
 
       - name: Unzip weic-website.zip
         run: |
-          unzip -o weic-website.zip -d ./  # -o 强制覆盖
+          unzip -o weic-website.zip -d ./  # -o forces overwrite
           echo "Unzip completed. Listing files:"
-          ls -laR  # 递归列出所有文件
+          ls -laR  # Recursively list all files
         working-directory: ${{ github.workspace }}
 
       - name: Commit Unzipped Files
         run: |
           git config user.name "GitHub Actions"
           git config user.email "actions@github.com"
+          git config --list  # Debug: List Git config
           git add .
-          git commit -m "Unzip weic-website.zip" || echo "No changes to commit"
+          git diff --staged --quiet || git commit -m "Unzip weic-website.zip"
           git push
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
