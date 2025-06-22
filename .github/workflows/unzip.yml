@@ -41,13 +41,14 @@ jobs:
         run: |
           git config user.name "GitHub Actions"
           git config user.email "actions@github.com"
-          git checkout -b ${{ inputs.my_branch }}  # Use custom branch input
+          git checkout -b ${{ inputs.my_branch }} || git checkout ${{ inputs.my_branch }}  # Create or switch to branch
           git add .
           git diff --staged --quiet || git commit -m "Unzip weic-website.zip"
-          git push origin ${{ inputs.my_branch }}  # Push to custom branch
+          git push origin ${{ inputs.my_branch }}  # Push to specified branch
+          echo "Push completed to branch ${{ inputs.my_branch }}"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        continue-on-error: true  # Optional: Continue if push fails
+        continue-on-error: true  # Continue if push fails for debugging
 
       - name: List Files After Commit
         run: ls -laR
