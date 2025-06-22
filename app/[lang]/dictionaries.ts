@@ -239,6 +239,74 @@ const dictionaries = {
       follow_us: "Бизди ээрчиңиз",
       copyright: "© 2024 Кыргызстан Дүйнөлүк Билим жана Инновация Колледжи. Бардык укуктар корголгон.",
     },
+    // ... (文件开头部分)
+
+const dictionaries = {
+  en: {
+    meta: {
+      // ...
+    },
+    nav: {
+      home: "Home",
+      about: "About Us",
+      admissions: "Admissions",
+      programs: "Programs", // <-- 添加这行
+      news: "News",
+      contact: "Contact",
+      language: "Language",
+    },
+    home: {
+      // ...
+    },
+    // ... (about, admissions, news, contact 对象)
+    footer: {
+      // ...
+    },
+    programs: { // <-- 添加这个新对象
+      title: "IT Programs",
+      subtitle: "Explore our long-term courses in Information Technology.",
+      key_modules: "Key Modules",
+      learn_more: "Learn More & Apply",
+      cs_bachelor_title: "Bachelor of Science in Computer Science",
+      cs_bachelor_desc: "This 4-year program provides a comprehensive foundation in computer science, preparing students for careers in software development, AI, and data science.",
+      cybersec_master_title: "Master of Science in Cybersecurity",
+      cybersec_master_desc: "A 2-year advanced program focused on protecting digital assets, covering everything from ethical hacking to strategic risk management."
+    },
+  },
+  ky: {
+    meta: {
+      // ...
+    },
+    nav: {
+      home: "Башкы бет",
+      about: "Биз жөнүндө",
+      admissions: "Кабыл алуу",
+      programs: "Программалар", // <-- 添加这行
+      news: "Жаңылыктар",
+      contact: "Байланыш",
+      language: "Тил",
+    },
+    home: {
+      // ...
+    },
+    // ... (about, admissions, news, contact 对象)
+    footer: {
+      // ...
+    },
+    programs: { // <-- 添加这个新对象
+      title: "IT Программалар",
+      subtitle: "Биздин маалымат технологиялары боюнча узак мөөнөттүү курстарды изилдеңиз.",
+      key_modules: "Негизги модулдар",
+      learn_more: "Көбүрөөк билүү жана тапшыруу",
+      cs_bachelor_title: "Компьютердик илимдер боюнча илимдин бакалавры",
+      cs_bachelor_desc: "Бул 4 жылдык программа программалык камсыздоону иштеп чыгуу, жасалма интеллект жана маалымат илими тармагында карьерага даярдап, компьютердик илимдер боюнча ар тараптуу негиз берет.",
+      cybersec_master_title: "Киберкоопсуздук боюнча илимдин магистри",
+      cybersec_master_desc: "Санариптик активдерди коргоого багытталган 2 жылдык алдыңкы программа, этикалык хакингден баштап стратегиялык тобокелдиктерди башкарууга чейин камтыйт."
+    },
+  },
+}
+
+// ... (文件剩余部分)
   },
 }
 
