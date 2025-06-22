@@ -1,5 +1,3 @@
-// weic-website/next.config.mjs
-
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   eslint: {
@@ -9,10 +7,9 @@ const nextConfig = {
     ignoreBuildErrors: true,
   },
   images: {
-    // unoptimized: true,  <-- 已删除或注释掉
     remotePatterns: [
       {
-        protocol: 'https'
+        protocol: 'https',
         hostname: '**',
       },
     ],
