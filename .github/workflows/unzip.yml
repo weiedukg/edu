@@ -1,27 +1,23 @@
-name: Unzip WEIC Website
+name: Test Unzip
 
 on:
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
-  workflow_dispatch:  # 添加手动触发支持
+  workflow_dispatch:
 
 jobs:
-  unzip:
+  test:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
-
-      - name: Unzip weic-website.zip
+      - name: Check if zip exists
         run: |
-          unzip weic-website.zip -d ./
-        working-directory: ${{ github.workspace }}
-
+          ls -la
+          if [ -f "weic-website.zip" ]; then
+            echo "Zip file found!"
+            unzip weic-website.zip -d ./
+          else
+            echo "Error: weic-website.zip not found!"
+            exit 1
+          fi
       - name: List Files
         run: ls -la
-        working-directory: ${{ github.workspace }}
