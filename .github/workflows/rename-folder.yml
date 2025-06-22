@@ -3,38 +3,32 @@
 name: Unzip and Commit Website
 
 on:
-  # 当推送到 main 分支时触发
   push:
     branches:
       - main
-  # 允许手动从 Actions 选项卡触发此工作流
   workflow_dispatch:
 
 jobs:
   unzip_and_commit:
     runs-on: ubuntu-latest
+
+    # --- 添加下面这部分来授予写入权限 ---
+    permissions:
+      contents: write
+    # ------------------------------------
+
     steps:
-      # 第一步：检出（Checkout）你的仓库代码
-      # 这样工作流才能访问你的 weic-website.zip 文件
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # 第二步：解压 weic-website.zip 文件
-      # -o 参数表示覆盖现有文件而无需提示
       - name: Unzip archive
         run: unzip -o weic-website.zip
 
-      # 第三步：提交并推送解压后的文件
       - name: Commit and push changes
         run: |
-          # 配置 Git 用户信息
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-          
-          # 将所有新文件和更改添加到暂存区
           git add .
-          
-          # 检查是否有文件变动，如果有，则提交并推送
           if ! git diff-index --quiet HEAD; then
             git commit -m "Automated: Unzip website files"
             git push
