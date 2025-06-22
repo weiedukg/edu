@@ -9,6 +9,7 @@ on:
       destination:
         description: 'Destination folder for unzipped files (e.g., folder/unzipped)'
         required: true
+        default: 'unzipped' # Default to a safe directory
       target_branch:
         description: 'Target branch for committing changes (e.g., unzip-output)'
         required: false
@@ -58,7 +59,7 @@ jobs:
         if: failure()  # Run only if previous step fails
         uses: peter-evans/create-pull-request@v5
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ github.event.inputs.GITHUB_TOKEN }}
           commit-message: "Unzip ${{ github.event.inputs.zip_file }} to ${{ github.event.inputs.destination }}"
           branch: ${{ github.event.inputs.target_branch }}
           base: main
