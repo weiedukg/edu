@@ -21,6 +21,7 @@ export function Navigation({ lang, dict }: NavigationProps) {
     { href: `/${lang}`, label: dict.nav.home },
     { href: `/${lang}/about`, label: dict.nav.about },
     { href: `/${lang}/admissions`, label: dict.nav.admissions },
+    { href: `/${lang}/programs`, label: dict.nav.programs }, // <-- 新增的 programs
     { href: `/${lang}/news`, label: dict.nav.news },
     { href: `/${lang}/contact`, label: dict.nav.contact },
   ]
