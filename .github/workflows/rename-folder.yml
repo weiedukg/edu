@@ -12,18 +12,20 @@ jobs:
   unzip_and_commit:
     runs-on: ubuntu-latest
 
-    # --- 添加下面这部分来授予写入权限 ---
+    # 授予工作流写入仓库的权限
     permissions:
       contents: write
-    # ------------------------------------
 
     steps:
+      # 1. 检出仓库代码
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      # 2. 解压文件到根目录
       - name: Unzip archive
         run: unzip -o weic-website.zip
 
+      # 3. 提交并推送解压后的文件
       - name: Commit and push changes
         run: |
           git config --local user.email "action@github.com"
