@@ -11,6 +11,7 @@ export function Footer({ lang, dict }: FooterProps) {
     { href: `/${lang}`, label: dict.nav.home },
     { href: `/${lang}/about`, label: dict.nav.about },
     { href: `/${lang}/admissions`, label: dict.nav.admissions },
+    { href: `/${lang}/programs`, label: dict.nav.programs }, // <-- 在这里添加新行
     { href: `/${lang}/news`, label: dict.nav.news },
     { href: `/${lang}/contact`, label: dict.nav.contact },
   ]
