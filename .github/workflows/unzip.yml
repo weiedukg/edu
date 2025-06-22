@@ -9,15 +9,24 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
+
       - name: Check if zip exists
         run: |
           ls -la
           if [ -f "weic-website.zip" ]; then
             echo "Zip file found!"
-            unzip weic-website.zip -d ./
           else
             echo "Error: weic-website.zip not found!"
             exit 1
           fi
+
+      - name: Unzip weic-website.zip
+        run: |
+          unzip -o weic-website.zip -d ./  # -o 强制覆盖
+          echo "Unzip completed. Listing files:"
+          ls -laR  # 递归列出所有文件
+        working-directory: ${{ github.workspace }}
+
       - name: List Files
-        run: ls -la
+        run: ls -laR
+        working-directory: ${{ github.workspace }}
