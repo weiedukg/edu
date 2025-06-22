@@ -3,27 +3,25 @@ name: Unzip WEIC Website
 on:
   push:
     branches:
-      - main  # 触发工作流的 branch，可以根据需要修改
+      - main
   pull_request:
     branches:
       - main
+  workflow_dispatch:  # 添加手动触发支持
 
 jobs:
   unzip:
     runs-on: ubuntu-latest
 
     steps:
-      # 检出代码
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      # 解压 weic-website.zip 到根目录
       - name: Unzip weic-website.zip
         run: |
           unzip weic-website.zip -d ./
         working-directory: ${{ github.workspace }}
 
-      # （可选）列出解压后的文件，方便调试
       - name: List Files
         run: ls -la
         working-directory: ${{ github.workspace }}
