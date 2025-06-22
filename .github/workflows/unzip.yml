@@ -27,6 +27,16 @@ jobs:
           ls -laR  # 递归列出所有文件
         working-directory: ${{ github.workspace }}
 
-      - name: List Files
+      - name: Commit Unzipped Files
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+          git add .
+          git commit -m "Unzip weic-website.zip" || echo "No changes to commit"
+          git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: List Files After Commit
         run: ls -laR
         working-directory: ${{ github.workspace }}
