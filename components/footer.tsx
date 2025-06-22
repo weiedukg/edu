@@ -1,5 +1,6 @@
 import Link from "next/link"
 import { Facebook, Twitter, Instagram, Linkedin, Mail, Phone, MapPin } from "lucide-react"
+import Image from "next/image"
 
 interface FooterProps {
   lang: "en" | "ky"
@@ -11,7 +12,7 @@ export function Footer({ lang, dict }: FooterProps) {
     { href: `/${lang}`, label: dict.nav.home },
     { href: `/${lang}/about`, label: dict.nav.about },
     { href: `/${lang}/admissions`, label: dict.nav.admissions },
-    { href: `/${lang}/programs`, label: dict.nav.programs }, // <-- 在这里添加新行
+    { href: `/${lang}/programs`, label: dict.nav.programs },
     { href: `/${lang}/news`, label: dict.nav.news },
     { href: `/${lang}/contact`, label: dict.nav.contact },
   ]
@@ -27,18 +28,20 @@ export function Footer({ lang, dict }: FooterProps) {
     <footer className="bg-muted/50 border-t">
       <div className="container mx-auto px-4 py-12">
         <div className="grid md:grid-cols-4 gap-8">
-          {/* College Info */}
+          {/* Institute Info */}
           <div className="space-y-4">
             <div className="flex items-center space-x-3">
-              <div className="relative">
-                <div className="h-10 w-10 bg-gradient-to-br from-blue-600 to-orange-500 rounded-lg flex items-center justify-center shadow-lg">
-                  <div className="text-white font-bold text-lg">WEI</div>
-                </div>
-                <div className="absolute -top-1 -right-1 h-3 w-3 bg-gradient-to-br from-orange-400 to-orange-600 rounded-full"></div>
-              </div>
+              <Image
+                src="/images/wei-logo.svg"
+                alt="WEI Logo"
+                width={40}
+                height={40}
+                className="drop-shadow-lg"
+                priority
+              />
               <div className="flex flex-col">
                 <span className="font-bold text-lg leading-tight">WEI</span>
-                <span className="text-xs text-muted-foreground leading-tight">College</span>
+                <span className="text-xs text-muted-foreground leading-tight">Future Education</span>
               </div>
             </div>
             <p className="text-muted-foreground text-sm leading-relaxed">{dict.footer.description}</p>
@@ -64,11 +67,11 @@ export function Footer({ lang, dict }: FooterProps) {
             <div className="space-y-3">
               <div className="flex items-center space-x-2 text-sm text-muted-foreground">
                 <MapPin className="h-4 w-4" />
-                <span>Chui Avenue 265, Bishkek 720040</span>
+                <span>123 Education Street, Bishkek 720001</span>
               </div>
               <div className="flex items-center space-x-2 text-sm text-muted-foreground">
                 <Phone className="h-4 w-4" />
-                <span>+996 312 66-12-34</span>
+                <span>+996 312 54-78-90</span>
               </div>
               <div className="flex items-center space-x-2 text-sm text-muted-foreground">
                 <Mail className="h-4 w-4" />
