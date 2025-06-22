@@ -3,12 +3,16 @@ name: Unzip File
 on:
   workflow_dispatch: # 手动触发工作流
     inputs:
-      zip_file: # 压缩文件路径
+      zip_file:
         description: 'Path to the zip file (e.g., folder/archive.zip)'
         required: true
-      destination: # 解压目标路径
+      destination:
         description: 'Destination folder for unzipped files (e.g., folder/unzipped)'
         required: true
+      target_branch:
+        description: 'Target branch for committing changes (e.g., unzip-output)'
+        required: false
+        default: 'unzip-output'
 
 jobs:
   unzip-file:
@@ -18,16 +22,47 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Check if zip file exists
+        run: |
+          if [ ! -f "${{ github.event.inputs.zip_file }}" ]; then
+            echo "Error: Zip file ${{ github.event.inputs.zip_file }} not found!"
+            exit 1
+          fi
+        shell: bash
+
+      - name: Create destination folder
+        run: |
+          mkdir -p ${{ github.event.inputs.destination }}
+        shell: bash
+
       - name: Unzip file
         run: |
           unzip -o ${{ github.event.inputs.zip_file }} -d ${{ github.event.inputs.destination }}
+          echo "Unzip completed. Listing files in ${{ github.event.inputs.destination }}:"
+          ls -laR ${{ github.event.inputs.destination }}
         shell: bash
 
       - name: Commit changes
         run: |
-          git config --global user.name 'GitHub Action'
-          git config --global user.email 'action@github.com'
+          git config user.name "GitHub Action"
+          git config user.email "action@github.com"
+          git checkout -b ${{ github.event.inputs.target_branch }} || git checkout ${{ github.event.inputs.target_branch }}
           git add .
-          git commit -m "Unzip ${{ github.event.inputs.zip_file }} to ${{ github.event.inputs.destination }}"
-          git push
-        shell: bash
+          git diff --staged --quiet || git commit -m "Unzip ${{ github.event.inputs.zip_file }} to ${{ github.event.inputs.destination }}"
+          git push origin ${{ github.event.inputs.target_branch }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        continue-on-error: true  # Continue for debugging
+
+      - name: Create Pull Request (if push fails)
+        if: failure()  # Run only if previous step fails
+        uses: peter-evans/create-pull-request@v5
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: "Unzip ${{ github.event.inputs.zip_file }} to ${{ github.event.inputs.destination }}"
+          branch: ${{ github.event.inputs.target_branch }}
+          base: main
+          title: "Add unzipped files from ${{ github.event.inputs.zip_file }}"
+          body: "This PR adds files extracted from ${{ github.event.inputs.zip_file }} via GitHub Actions."
+          labels: "automated"
+        continue-on-error: true
