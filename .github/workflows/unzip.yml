@@ -1,57 +1,33 @@
-name: Test Unzip
+name: Unzip File
 
 on:
-  workflow_dispatch:
+  workflow_dispatch: # 手动触发工作流
     inputs:
-      my_branch:
-        description: 'Branch to push unzipped files'
-        required: false
-        default: 'unzip-output'
+      zip_file: # 压缩文件路径
+        description: 'Path to the zip file (e.g., folder/archive.zip)'
+        required: true
+      destination: # 解压目标路径
+        description: 'Destination folder for unzipped files (e.g., folder/unzipped)'
+        required: true
 
 jobs:
-  test:
+  unzip-file:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout Repository
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Check if zip exists
+      - name: Unzip file
         run: |
-          ls -la
-          if [ -f "weic-website.zip" ]; then
-            echo "Zip file found!"
-          else
-            echo "Error: weic-website.zip not found!"
-            exit 1
-          fi
+          unzip -o ${{ github.event.inputs.zip_file }} -d ${{ github.event.inputs.destination }}
+        shell: bash
 
-      - name: Verify Zip File
+      - name: Commit changes
         run: |
-          unzip -l weic-website.zip  # List zip file contents
-        working-directory: ${{ github.workspace }}
-
-      - name: Unzip weic-website.zip
-        run: |
-          unzip -o weic-website.zip -d ./  # -o forces overwrite
-          echo "Unzip completed. Listing files:"
-          ls -laR  # Recursively list all files
-        working-directory: ${{ github.workspace }}
-
-      - name: Commit Unzipped Files
-        run: |
-          git config user.name "GitHub Actions"
-          git config user.email "actions@github.com"
-          echo "Current branch before checkout: $(git rev-parse --abbrev-ref HEAD)"
-          git checkout -b ${{ inputs.my_branch }} || git checkout ${{ inputs.my_branch }}  # Create or switch to branch
-          echo "Current branch after checkout: $(git rev-parse --abbrev-ref HEAD)"
+          git config --global user.name 'GitHub Action'
+          git config --global user.email 'action@github.com'
           git add .
-          git diff --staged --quiet || git commit -m "Unzip weic-website.zip"
-          git push origin ${{ inputs.my_branch }}  # Push to specified branch
-          echo "Push completed to branch ${{ inputs.my_branch }}"
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        continue-on-error: true  # Continue if push fails
-
-      - name: List Files After Commit
-        run: ls -laR
-        working-directory: ${{ github.workspace }}
+          git commit -m "Unzip ${{ github.event.inputs.zip_file }} to ${{ github.event.inputs.destination }}"
+          git push
+        shell: bash
