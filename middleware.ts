@@ -4,39 +4,28 @@ import type { NextRequest } from "next/server"
 const locales = ["en", "ky"]
 const defaultLocale = "en"
 
-function getLocale(request: NextRequest) {
-  // Check if there is any supported locale in the pathname
+export function middleware(request: NextRequest) {
+  // 检查路径名中是否有任何支持的区域设置
   const pathname = request.nextUrl.pathname
   const pathnameIsMissingLocale = locales.every(
-    (locale) => !pathname.startsWith(`/${locale}/`) && pathname !== `/${locale}`,
+    (locale) => !pathname.startsWith(`/${locale}/`) && pathname !== `/${locale}`
   )
 
-  // Redirect if there is no locale
+  // 如果没有区域设置，则重定向
   if (pathnameIsMissingLocale) {
     const locale = defaultLocale
 
-    // e.g. incoming request is /products
-    // The new URL is now /en/products
-    return NextResponse.redirect(new URL(`/${locale}${pathname.startsWith("/") ? "" : "/"}${pathname}`, request.url))
+    // 例如，传入的请求是 /products
+    // 新的 URL 现在是 /en/products
+    return NextResponse.redirect(
+      new URL(`/${locale}${pathname.startsWith("/") ? "" : "/"}${pathname}`, request.url)
+    )
   }
-}
-
-export function middleware(request: NextRequest) {
-  // Check if there is any supported locale in the pathname
-  const pathname = request.nextUrl.pathname
-  const pathnameHasLocale = locales.some((locale) => pathname.startsWith(`/${locale}/`) || pathname === `/${locale}`)
-
-  if (pathnameHasLocale) return
-
-  // Redirect if there is no locale
-  const locale = defaultLocale
-  request.nextUrl.pathname = `/${locale}${pathname}`
-  return NextResponse.redirect(request.nextUrl)
 }
 
 export const config = {
   matcher: [
-    // Skip all internal paths (_next)
-    "/((?!_next|api|favicon.ico).*)",
+    // 跳过所有内部路径 (_next) 和静态文件 (带有点号 . 的路径)
+    "/((?!api|_next/static|_next/image|.*\\..*).*)",
   ],
 }
