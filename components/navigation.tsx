@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { Menu, Globe } from "lucide-react"
+import Image from "next/image"
 
 interface NavigationProps {
   lang: "en" | "ky"
@@ -21,7 +22,7 @@ export function Navigation({ lang, dict }: NavigationProps) {
     { href: `/${lang}`, label: dict.nav.home },
     { href: `/${lang}/about`, label: dict.nav.about },
     { href: `/${lang}/admissions`, label: dict.nav.admissions },
-    { href: `/${lang}/programs`, label: dict.nav.programs }, // <-- 新增的 programs
+    { href: `/${lang}/programs`, label: dict.nav.programs },
     { href: `/${lang}/news`, label: dict.nav.news },
     { href: `/${lang}/contact`, label: dict.nav.contact },
   ]
@@ -38,14 +39,18 @@ export function Navigation({ lang, dict }: NavigationProps) {
           {/* Logo */}
           <Link href={`/${lang}`} className="flex items-center space-x-3">
             <div className="relative">
-              <div className="h-10 w-10 bg-gradient-to-br from-blue-600 to-orange-500 rounded-lg flex items-center justify-center shadow-lg">
-                <div className="text-white font-bold text-lg">WEI</div>
-              </div>
-              <div className="absolute -top-1 -right-1 h-3 w-3 bg-gradient-to-br from-orange-400 to-orange-600 rounded-full"></div>
+              <Image
+                src="/images/wei-logo.svg"
+                alt="WEI Logo"
+                width={40}
+                height={40}
+                className="drop-shadow-lg"
+                priority
+              />
             </div>
             <div className="flex flex-col">
               <span className="font-bold text-lg leading-tight">WEI</span>
-              <span className="text-xs text-muted-foreground leading-tight">College</span>
+              <span className="text-xs text-muted-foreground leading-tight">Future Education</span>
             </div>
           </Link>
 
