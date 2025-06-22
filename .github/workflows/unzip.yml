@@ -41,25 +41,16 @@ jobs:
         run: |
           git config user.name "GitHub Actions"
           git config user.email "actions@github.com"
+          echo "Current branch before checkout: $(git rev-parse --abbrev-ref HEAD)"
           git checkout -b ${{ inputs.my_branch }} || git checkout ${{ inputs.my_branch }}  # Create or switch to branch
+          echo "Current branch after checkout: $(git rev-parse --abbrev-ref HEAD)"
           git add .
           git diff --staged --quiet || git commit -m "Unzip weic-website.zip"
-          git push origin ${{ inputs.my_branch }}
+          git push origin ${{ inputs.my_branch }}  # Push to specified branch
+          echo "Push completed to branch ${{ inputs.my_branch }}"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         continue-on-error: true  # Continue if push fails
-
-      - name: Create Pull Request
-        uses: peter-evans/create-pull-request@v5
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          commit-message: "Unzip weic-website.zip"
-          branch: ${{ inputs.my_branch }}
-          base: main
-          title: "Add unzipped files from weic-website.zip"
-          body: "This PR adds files extracted from weic-website.zip via GitHub Actions."
-          labels: "automated"
-        continue-on-error: true  # Continue if PR creation fails
 
       - name: List Files After Commit
         run: ls -laR
