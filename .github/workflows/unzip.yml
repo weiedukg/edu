@@ -20,6 +20,11 @@ jobs:
             exit 1
           fi
 
+      - name: Verify Zip File
+        run: |
+          unzip -l weic-website.zip  # 列出 zip 文件内容
+        working-directory: ${{ github.workspace }}
+
       - name: Unzip weic-website.zip
         run: |
           unzip -o weic-website.zip -d ./  # -o 强制覆盖
