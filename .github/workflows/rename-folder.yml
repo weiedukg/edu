@@ -1,69 +1,43 @@
-name: Unzip File
+# .github/workflows/unzip.yml
+
+name: Unzip and Commit Website
 
 on:
-  workflow_dispatch: # 手动触发工作流
-    inputs:
-      zip_file:
-        description: 'Path to the zip file (e.g., folder/archive.zip)'
-        required: true
-      destination:
-        description: 'Destination folder for unzipped files (e.g., folder/unzipped)'
-        required: true
-        default: 'unzipped' # Default to a safe directory
-      target_branch:
-        description: 'Target branch for committing changes (e.g., unzip-output)'
-        required: false
-        default: 'unzip-output'
+  # 当推送到 main 分支时触发
+  push:
+    branches:
+      - main
+  # 允许手动从 Actions 选项卡触发此工作流
+  workflow_dispatch:
 
 jobs:
-  unzip-file:
+  unzip_and_commit:
     runs-on: ubuntu-latest
-
     steps:
+      # 第一步：检出（Checkout）你的仓库代码
+      # 这样工作流才能访问你的 weic-website.zip 文件
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Check if zip file exists
-        run: |
-          if [ ! -f "${{ github.event.inputs.zip_file }}" ]; then
-            echo "Error: Zip file ${{ github.event.inputs.zip_file }} not found!"
-            exit 1
-          fi
-        shell: bash
+      # 第二步：解压 weic-website.zip 文件
+      # -o 参数表示覆盖现有文件而无需提示
+      - name: Unzip archive
+        run: unzip -o weic-website.zip
 
-      - name: Create destination folder
+      # 第三步：提交并推送解压后的文件
+      - name: Commit and push changes
         run: |
-          mkdir -p ${{ github.event.inputs.destination }}
-        shell: bash
-
-      - name: Unzip file
-        run: |
-          unzip -o ${{ github.event.inputs.zip_file }} -d ${{ github.event.inputs.destination }}
-          echo "Unzip completed. Listing files in ${{ github.event.inputs.destination }}:"
-          ls -laR ${{ github.event.inputs.destination }}
-        shell: bash
-
-      - name: Commit changes
-        run: |
-          git config user.name "GitHub Action"
-          git config user.email "action@github.com"
-          git checkout -b ${{ github.event.inputs.target_branch }} || git checkout ${{ github.event.inputs.target_branch }}
+          # 配置 Git 用户信息
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          
+          # 将所有新文件和更改添加到暂存区
           git add .
-          git diff --staged --quiet || git commit -m "Unzip ${{ github.event.inputs.zip_file }} to ${{ github.event.inputs.destination }}"
-          git push origin ${{ github.event.inputs.target_branch }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        continue-on-error: true  # Continue for debugging
-
-      - name: Create Pull Request (if push fails)
-        if: failure()  # Run only if previous step fails
-        uses: peter-evans/create-pull-request@v5
-        with:
-          token: ${{ github.event.inputs.GITHUB_TOKEN }}
-          commit-message: "Unzip ${{ github.event.inputs.zip_file }} to ${{ github.event.inputs.destination }}"
-          branch: ${{ github.event.inputs.target_branch }}
-          base: main
-          title: "Add unzipped files from ${{ github.event.inputs.zip_file }}"
-          body: "This PR adds files extracted from ${{ github.event.inputs.zip_file }} via GitHub Actions."
-          labels: "automated"
-        continue-on-error: true
+          
+          # 检查是否有文件变动，如果有，则提交并推送
+          if ! git diff-index --quiet HEAD; then
+            git commit -m "Automated: Unzip website files"
+            git push
+          else
+            echo "No changes to commit."
+          fi
